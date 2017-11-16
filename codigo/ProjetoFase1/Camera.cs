@@ -19,6 +19,7 @@ namespace ProjetoFase1
         public Vector3 camPosition; //Posicao da Camera nos 3 eixos
         Vector3 direction;
         private float aspectRatio;
+        public Matrix projection;
 
         float yaw, roll, vel; // yaw e pitch vão adquirir valores de acordo com o rato, Vel e apenas para ajustar a velocidade da camera
         Matrix mDirecao;// corresponde à direção da camera
@@ -29,6 +30,7 @@ namespace ProjetoFase1
         Vector3 NormalX = Vector3.Right;
         Vector3 turnX; Vector3 turnZ;
 
+       
         public Camera(GraphicsDevice device)
         {
             aspectRatio = (float)device.Viewport.Width /
@@ -44,6 +46,7 @@ namespace ProjetoFase1
             camPosition, //este varia conforme percorremos o terreno
             camPosition + direction, //Da a orientação da camera
             Vector3.Up);
+            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), aspectRatio, 0.001f, 1000.0f);
 
         }
         public void UpdateMove(KeyboardState key, MouseState state, Terrain terrain) //Recebe os inputs do teclado, rato e recebe um terreno

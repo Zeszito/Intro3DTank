@@ -36,7 +36,7 @@ namespace ProjetoFase1
         Vector3[] listNormals;
 
 
-        public Terrain(GraphicsDevice device, ContentManager content)
+        public Terrain(GraphicsDevice device, ContentManager content, Matrix projection)
         {
             effect = new BasicEffect(device);
             texture = content.Load<Texture2D>("ground");
@@ -45,11 +45,11 @@ namespace ProjetoFase1
 
 
 
-            float aspectRatio = (float)device.Viewport.Width / device.Viewport.Height;
+
 
             //Multiplicar as Matrizes
             //effect.View = Matrix.CreateLookAt(new Vector3(100f, 5f, 20f), Vector3.Zero, Vector3.Up);
-            effect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), aspectRatio, 0.001f, 1000.0f);
+            effect.Projection = projection;
 
             effect.LightingEnabled = true; // turn on the lighting subsystem.
                                            //effect.EnableDefaultLighting();

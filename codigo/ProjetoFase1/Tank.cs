@@ -45,13 +45,15 @@ namespace ProjetoFase1
 
         Matrix[] bonetransforms;
 
-        public Tank(GraphicsDevice device, ContentManager content)
+        public Tank(GraphicsDevice device, ContentManager content, Vector3 PosicaoInicial, Matrix projection)
         {
+            this.projection = projection;
+            posicao = PosicaoInicial;
             myModel = content.Load<Model>("tank");
             effect = new BasicEffect(device);
-            float aspectRatio = (float)device.Viewport.Width / device.Viewport.Height;
+            //float aspectRatio = (float)device.Viewport.Width / device.Viewport.Height;
             view = Matrix.CreateLookAt(new Vector3(0.5f, 2.0f, 2.0f), Vector3.Zero, Vector3.Up);
-            projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45.0f), aspectRatio, 0.001f, 1000.0f);
+          
             effect.LightingEnabled = true;
             myModel.Root.Transform = Matrix.CreateTranslation(posicao);
 
@@ -91,7 +93,7 @@ namespace ProjetoFase1
             //effect.EmissiveColor = new Vector3(150f, 150, 150);
         }
 
-        public void Update(KeyboardState kb, Terrain terrain, Keys up, Keys down, Keys left, Keys rigth)
+        public void Update(KeyboardState kb, Terrain terrain, Keys up, Keys down, Keys left, Keys rigth, Keys torreRight, Keys torreLeft, Keys torreUp, Keys torreDown)
         {
             Matrix rotacao = Matrix.CreateFromYawPitchRoll(yaw, 0, 0);
             Vector3 direcaoHorizontal = Vector3.Transform(direcaoBase, rotacao);
@@ -148,20 +150,20 @@ namespace ProjetoFase1
                 //wheelSideRotation -= wheelSideRotation;
             }
 
-            if (kb.IsKeyDown(Keys.Left))
+            if (kb.IsKeyDown(torreLeft))
             {
                 turretAngle -= MathHelper.ToRadians(1f);
             }
-            if (kb.IsKeyDown(Keys.Right))
+            if (kb.IsKeyDown(torreRight))
             {
                 turretAngle += MathHelper.ToRadians(1f);
             }
 
-            if (kb.IsKeyDown(Keys.Up))
+            if (kb.IsKeyDown(torreUp))
             {
                 cannonAngle -= MathHelper.ToRadians(1f);
             }
-            if (kb.IsKeyDown(Keys.Down))
+            if (kb.IsKeyDown(torreDown))
             {
                 cannonAngle += MathHelper.ToRadians(1f);
             }

@@ -38,9 +38,9 @@ namespace ProjetoFase1
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             camSurfaceFollow = new Camera(GraphicsDevice);
-            terrain = new Terrain(GraphicsDevice, Content);
-            tank = new Tank(GraphicsDevice, Content);
-            tank2 = new Tank(GraphicsDevice, Content);
+            terrain = new Terrain(GraphicsDevice, Content, camSurfaceFollow.projection);
+            tank = new Tank(GraphicsDevice, Content, new Vector3(80, 0, 100), camSurfaceFollow.projection);
+            tank2 = new Tank(GraphicsDevice, Content, new Vector3(60, 0, 120), camSurfaceFollow.projection);
             // TODO: use this.Content to load your game content here
         }
 
@@ -58,8 +58,8 @@ namespace ProjetoFase1
             //Lê ps inputs do teclado e do rato e manda-os para a câmera
             KeyboardState keyState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
-            tank.Update(keyState, terrain, Keys.W, Keys.S, Keys.A,Keys.D);
-            tank2.Update(keyState, terrain, Keys.I, Keys.K, Keys.J, Keys.L);
+            tank.Update(keyState, terrain, Keys.W, Keys.S, Keys.A,Keys.D, Keys.Right, Keys.Left, Keys.Up, Keys.Down);
+            tank2.Update(keyState, terrain, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O, Keys.P, Keys.U,Keys.H);
             camSurfaceFollow.UpdateMove(keyState, mouseState, terrain);
 
             base.Update(gameTime);
