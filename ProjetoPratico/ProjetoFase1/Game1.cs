@@ -125,7 +125,7 @@ namespace ProjetoFase1
 
             #region Tanques
             tank.Update(keyState, terrain, Keys.W, Keys.S, Keys.A,Keys.D, Keys.Right, Keys.Left, Keys.Up, Keys.Down, Keys.Space, tank2.staticSphere,null);
-            tank2.Update(keyState, terrain, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O, Keys.P, Keys.U,Keys.H, Keys.Enter, tank.staticSphere, null);
+            tank2.Update(keyState, terrain, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O, Keys.P, Keys.U,Keys.H, Keys.Enter, tank.staticSphere, tank);
             #endregion
 
             base.Update(gameTime);

@@ -4,8 +4,8 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Moises/Desktop/tranferencias2/ProjetoPratico/ProjetoPratico/ProjetoFase1/Content/ground.jpg</File>
-    <File>C:/Users/Moises/Desktop/tranferencias2/ProjetoPratico/ProjetoPratico/ProjetoFase1/Content/grass.jpg</File>
-    <File>C:/Users/Moises/Desktop/tranferencias2/ProjetoPratico/ProjetoPratico/ProjetoFase1/Content/bala.FBX</File>
+    <File>C:/Users/Moises/Desktop/RepoTank/Intro3DTank/ProjetoPratico/ProjetoFase1/Content/ground.jpg</File>
+    <File>C:/Users/Moises/Desktop/RepoTank/Intro3DTank/ProjetoPratico/ProjetoFase1/Content/grass.jpg</File>
+    <File>C:/Users/Moises/Desktop/RepoTank/Intro3DTank/ProjetoPratico/ProjetoFase1/Content/bala.FBX</File>
   </SourceFiles>
 </SourceFileCollection>

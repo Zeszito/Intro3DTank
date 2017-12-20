@@ -63,6 +63,7 @@ namespace ProjetoFase1
         GraphicsDevice device;
 
         List<TargetLine> scopeLine;
+        public bool ismoving = false;
 
         public Tank(GraphicsDevice device, ContentManager content, Vector3 PosicaoInicial, Matrix projection)
         {
@@ -143,6 +144,7 @@ namespace ProjetoFase1
             if (presa != null)
             {
                 boidChase(presa);
+               
             }
             else
             {
@@ -158,6 +160,7 @@ namespace ProjetoFase1
                     {
                         posicao -= vel * tankDir;
                         wheelRotation += 0.5f;
+                        ismoving = true;
                     }
                     colSphere.center = posicao;
                 }
@@ -165,6 +168,7 @@ namespace ProjetoFase1
                 {
                     posicao += vel * tankDir;
                     wheelRotation -= 0.5f;
+                    ismoving = true;
                 }
 
                 if (kb.IsKeyDown(right))
@@ -206,6 +210,7 @@ namespace ProjetoFase1
                 {
                     cannonAngle += MathHelper.ToRadians(1f);
                 }
+                ismoving = false;
 
             } // fimd e teclas
 
@@ -297,21 +302,46 @@ namespace ProjetoFase1
             //posicao -= vel * tankDir;
             wheelRotation += 0.5f;
 
-            velocidade = (tankAPresseguir.posicao + tankAPresseguir.vel * tankAPresseguir.tankDir) - (posicao + vel * tankDir); //Velocidde
-            distancia = tankAPresseguir.posicao - posicao;
-            tempoColisao = 1; //distancia.Length() / velocidade.Length();
-            pontoIntercepcao = tankAPresseguir.posicao + ((tankAPresseguir.posicao * tankAPresseguir.vel) * tempoColisao);
+            if (ismoving)
+            {
+                velocidade = (tankAPresseguir.vel * tankAPresseguir.tankDir) - (vel * tankDir); //Velocidde
+                distancia = tankAPresseguir.posicao - posicao;
+                tempoColisao = distancia.Length() / velocidade.Length();
+                pontoIntercepcao = tankAPresseguir.posicao + ((tankAPresseguir.posicao * tankAPresseguir.vel) * tempoColisao);
 
+                //double angloFormado = Math.Acos(Vector2.Dot((new Vector2(posicao.X, posicao.Z)), (new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
+                //double angloFormado = Math.Atan2(pontoIntercepcao.Z - posicao.Z, pontoIntercepcao.X - posicao.X);
+                yaw = (float)Math.Acos((float)(pontoIntercepcao.X * tankDir.X + pontoIntercepcao.Z * tankDir.Z)
+                      /((float)Math.Sqrt((pontoIntercepcao.X * pontoIntercepcao.X) + (pontoIntercepcao.Z * pontoIntercepcao.Z)) * (float)Math.Sqrt((tankDir.Z * tankDir.Z) + (tankDir.X * tankDir.X))));
+                //posicao -= vel * tankDir;
+            }
+            if(ismoving == false)
+            {
+                velocidade =tankAPresseguir.tankDir - (vel * tankDir); //Velocidde
+                distancia = tankAPresseguir.posicao - posicao;
+                tempoColisao = distancia.Length() / velocidade.Length();
+                pontoIntercepcao = tankAPresseguir.posicao + (tankAPresseguir.posicao) * tempoColisao;
 
+                //double angloFormado = Math.Acos(Vector2.Dot(Vector2.Normalize(new Vector2(posicao.X, posicao.Z)), Vector2.Normalize(new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
+                //double angloFormado = Math.Atan(pontoIntercepcao.Z - posicao.Z/ pontoIntercepcao.X - posicao.X);
+                //double angloFormado = Math.Acos(Vector2.Dot((new Vector2(posicao.X, posicao.Z)), (new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
+                yaw = (float)Math.Acos((float)(pontoIntercepcao.X * tankDir.X + pontoIntercepcao.Z * tankDir.Z)
+                / ((float)Math.Sqrt((pontoIntercepcao.X * pontoIntercepcao.X) + (pontoIntercepcao.Z * pontoIntercepcao.Z)) * (float)Math.Sqrt((tankDir.Z * tankDir.Z) + (tankDir.X * tankDir.X))));
+                //posicao -= vel * tankDir;
+          
+
+            }
+        
             //criar um vector tank a ponto, comprar coma direccao e se for maior direita se menor esquerda, ver o angulo entre eles
-            Vector3 vectorTankPonto = pontoIntercepcao - posicao;
-            double angloFormado = Math.Atan(vectorTankPonto.Z - posicao.Z / vectorTankPonto.X - posicao.X);
+            //Vector3 vectorTankPonto = pontoIntercepcao - posicao;
+            //double angloFormado = Math.Atan2(pontoIntercepcao.Z - posicao.Z , pontoIntercepcao.X - posicao.X);
             //istop podia se passar como YAW
-            //double angloFormado = Math.Acos(Vector2.Dot(Vector2.Normalize(new Vector2(posicao.X, posicao.Z)), Vector2.Normalize(new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
+           
+            //double normli = Math.Sqrt(pontoIntercepcao.X * pontoIntercepcao.X + pontoIntercepcao.Z * pontoIntercepcao.Z);
+            //tankDir.X = (float)(posicao.X - pontoIntercepcao.X) / (float)(normli);
+            //tankDir.Z = (float)(posicao.Z - pontoIntercepcao.Z) / (float)(normli);
+      
 
-            double normli = Math.Sqrt(pontoIntercepcao.X * pontoIntercepcao.X + pontoIntercepcao.Z * pontoIntercepcao.Z);
-            tankDir.X = (float)(pontoIntercepcao.X - posicao.X) / (float)(normli);
-            tankDir.Z = (float)(pontoIntercepcao.Z - posicao.Z) / (float)(normli);
 
         }
 
