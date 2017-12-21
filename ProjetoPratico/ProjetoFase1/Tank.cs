@@ -119,7 +119,7 @@ namespace ProjetoFase1
         }
 
         public void Update(KeyboardState kb, Terrain terrain, Keys up, Keys down, Keys left, Keys right, Keys torreRight, Keys torreLeft, 
-            Keys torreUp, Keys torreDown, Keys shootKey, List<Sphere> other, Tank presa)
+            Keys torreUp, Keys torreDown, Keys shootKey, List<Sphere> other)
         {
             //Esta parte do codigo vai calcular a direção do tanque
             Matrix rotacao = Matrix.CreateFromYawPitchRoll(yaw, 0, 0);
@@ -142,15 +142,15 @@ namespace ProjetoFase1
             rotacao.Forward = tankDir;
 
           
-            #region Boids
-            if (presa != null)
-            {
-                boidChase(presa);
+            //#region Boids
+            //if (presa != null)
+            //{
+            //    boidChase(presa);
+
                
-            }
-            else
-            {
-                #endregion
+            //}
+         
+               // #endregion
 
                 #region Movimentos
                 positionPrev = posicao;
@@ -228,7 +228,7 @@ namespace ProjetoFase1
                 }
                 ismoving = false;
 
-            } // fimd e teclas
+      
 
                 if (!canShoot)
             {
@@ -307,62 +307,160 @@ namespace ProjetoFase1
 
         }
 
-    public void boidChase(Tank tankAPresseguir)
+    //public void boidChase(Tank tankAPresseguir)
+    //    {
+    //        Vector3 distancia;
+    //        Vector3 velocidade;
+    //        Vector3 pontoIntercepcao;
+    //        float tempoColisao;
+
+
+    //        //posicao -= vel * tankDir;
+    //        wheelRotation += 0.5f;
+
+    //        if (tankAPresseguir.ismoving)
+    //        {
+    //            velocidade = (tankAPresseguir.vel * tankAPresseguir.tankDir) - (vel * tankDir); //Velocidde
+    //            distancia = tankAPresseguir.posicao - posicao;
+    //            tempoColisao = distancia.Length() / velocidade.Length();
+    //            pontoIntercepcao = tankAPresseguir.posicao + ((tankAPresseguir.posicao * tankAPresseguir.vel) * tempoColisao);
+
+    //            //double angloFormado = Math.Acos(Vector2.Dot((new Vector2(posicao.X, posicao.Z)), (new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
+    //            //double angloFormado = Math.Atan2(pontoIntercepcao.Z - posicao.Z, pontoIntercepcao.X - posicao.X);
+    //            yaw = (float)Math.Acos((float)(pontoIntercepcao.X * tankDir.X + pontoIntercepcao.Z * tankDir.Z)
+    //              /((float)Math.Sqrt((pontoIntercepcao.X * pontoIntercepcao.X) + (pontoIntercepcao.Z * pontoIntercepcao.Z)) * (float)Math.Sqrt((tankDir.Z * tankDir.Z) + (tankDir.X * tankDir.X))));
+    //            Matrix rotacao = Matrix.CreateFromYawPitchRoll(yaw, 0, 0);
+
+    //            rotacao = Matrix.Identity;
+
+    //            Vector3 direcaoHorizontal = Vector3.Transform(direcaoBase, rotacao);
+    //            Vector3 tankNormal = Vector3.Normalize(normal);
+    //            rotacao.Up = tankNormal;
+
+    //            Vector3 tankRight = Vector3.Normalize(Vector3.Cross(direcaoHorizontal, tankNormal));
+    //            rotacao.Right = tankRight;
+
+    //            tankDir = Vector3.Normalize(Vector3.Cross(tankNormal, tankRight));
+    //            rotacao.Forward = tankDir;
+    //            //tankDir = -pontoIntercepcao;
+    //            // posicao -= vel * tankDir;
+    //        }
+  
+        
+    //        //criar um vector tank a ponto, comprar coma direccao e se for maior direita se menor esquerda, ver o angulo entre eles
+    //        //Vector3 vectorTankPonto = pontoIntercepcao - posicao;
+    //        //double angloFormado = Math.Atan2(pontoIntercepcao.Z - posicao.Z , pontoIntercepcao.X - posicao.X);
+    //        //istop podia se passar como YAW
+           
+    //        //double normli = Math.Sqrt(pontoIntercepcao.X * pontoIntercepcao.X + pontoIntercepcao.Z * pontoIntercepcao.Z);
+    //        //tankDir.X = (float)(posicao.X - pontoIntercepcao.X) / (float)(normli);
+    //        //tankDir.Z = (float)(posicao.Z - pontoIntercepcao.Z) / (float)(normli);
+      
+
+
+    //    }
+
+        public void updateCacador(KeyboardState kb, Terrain terrain, Keys up, Keys down, Keys left, Keys right, Keys torreRight, Keys torreLeft,
+            Keys torreUp, Keys torreDown, Keys shootKey, List<Sphere> other, Tank tankAPresseguir)
         {
+            //Esta parte do codigo vai calcular a direção do tanque
+            Matrix rotacao = Matrix.CreateFromYawPitchRoll(yaw, 0, 0);
+            Vector3 direcaoHorizontal = Vector3.Transform(direcaoBase, rotacao);
+
+            posicao.Y = terrain.CalculateInterpolation(posicao.X, posicao.Z, 0f);
+            normal = terrain.CalculateInterpolationNormal(posicao.X, posicao.Z);
+
+            Matrix translacao = Matrix.CreateTranslation(posicao);
+
+            rotacao = Matrix.Identity;
+
+            Vector3 tankNormal = Vector3.Normalize(normal);
+            rotacao.Up = tankNormal;
+
+            Vector3 tankRight = Vector3.Normalize(Vector3.Cross(direcaoHorizontal, tankNormal));
+            rotacao.Right = tankRight;
+
+            tankDir = Vector3.Normalize(Vector3.Cross(tankNormal, tankRight));
+            rotacao.Forward = tankDir;
+
             Vector3 distancia;
             Vector3 velocidade;
             Vector3 pontoIntercepcao;
             float tempoColisao;
 
+            velocidade = (tankAPresseguir.vel * tankAPresseguir.tankDir) - (vel * tankDir); //Velocidde
+            distancia = tankAPresseguir.posicao - posicao;
+            tempoColisao = 0.2f;
+            pontoIntercepcao = tankAPresseguir.posicao + ((tankAPresseguir.posicao * tankAPresseguir.vel) *tempoColisao );
 
-            //posicao -= vel * tankDir;
-            wheelRotation += 0.5f;
-
-            if (ismoving)
-            {
-                velocidade = (tankAPresseguir.vel * tankAPresseguir.tankDir) - (vel * tankDir); //Velocidde
-                distancia = tankAPresseguir.posicao - posicao;
-                tempoColisao = distancia.Length() / velocidade.Length();
-                pontoIntercepcao = tankAPresseguir.posicao + ((tankAPresseguir.posicao * tankAPresseguir.vel) * tempoColisao);
-
-                //double angloFormado = Math.Acos(Vector2.Dot((new Vector2(posicao.X, posicao.Z)), (new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
-                //double angloFormado = Math.Atan2(pontoIntercepcao.Z - posicao.Z, pontoIntercepcao.X - posicao.X);
-                //yaw = (float)Math.Acos((float)(pontoIntercepcao.X * tankDir.X + pontoIntercepcao.Z * tankDir.Z)
-                //    /((float)Math.Sqrt((pontoIntercepcao.X * pontoIntercepcao.X) + (pontoIntercepcao.Z * pontoIntercepcao.Z)) * (float)Math.Sqrt((tankDir.Z * tankDir.Z) + (tankDir.X * tankDir.X))));
-                tankDir = -pontoIntercepcao;
-                // posicao -= vel * tankDir;
-            }
-            if(ismoving == false)
-            {
-                velocidade =tankAPresseguir.tankDir - (vel * tankDir); //Velocidde
-                distancia = tankAPresseguir.posicao - posicao;
-                tempoColisao = distancia.Length() / velocidade.Length();
-                pontoIntercepcao = tankAPresseguir.posicao + (tankAPresseguir.posicao) * tempoColisao;
-
-                //double angloFormado = Math.Acos(Vector2.Dot(Vector2.Normalize(new Vector2(posicao.X, posicao.Z)), Vector2.Normalize(new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
-                //double angloFormado = Math.Atan(pontoIntercepcao.Z - posicao.Z/ pontoIntercepcao.X - posicao.X);
-                //double angloFormado = Math.Acos(Vector2.Dot((new Vector2(posicao.X, posicao.Z)), (new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
-                // yaw = (float)Math.Acos((float)(pontoIntercepcao.X * tankDir.X + pontoIntercepcao.Z * tankDir.Z)
-                // / ((float)Math.Sqrt((pontoIntercepcao.X * pontoIntercepcao.X) + (pontoIntercepcao.Z * pontoIntercepcao.Z)) * (float)Math.Sqrt((tankDir.Z * tankDir.Z) + (tankDir.X * tankDir.X))));
-                //posicao -= vel * tankDir;
-                tankDir = - pontoIntercepcao;
-                //posicao -= vel * tankDir;
-
-            }
-        
-            //criar um vector tank a ponto, comprar coma direccao e se for maior direita se menor esquerda, ver o angulo entre eles
-            //Vector3 vectorTankPonto = pontoIntercepcao - posicao;
-            //double angloFormado = Math.Atan2(pontoIntercepcao.Z - posicao.Z , pontoIntercepcao.X - posicao.X);
-            //istop podia se passar como YAW
+            //double angloFormado = Math.Acos(Vector2.Dot((new Vector2(posicao.X, posicao.Z)), (new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
+            //double angloFormado = Math.Atan2(pontoIntercepcao.Z - posicao.Z, pontoIntercepcao.X - posicao.X);
            
-            //double normli = Math.Sqrt(pontoIntercepcao.X * pontoIntercepcao.X + pontoIntercepcao.Z * pontoIntercepcao.Z);
-            //tankDir.X = (float)(posicao.X - pontoIntercepcao.X) / (float)(normli);
-            //tankDir.Z = (float)(posicao.Z - pontoIntercepcao.Z) / (float)(normli);
-      
 
+            double normli = Math.Sqrt(pontoIntercepcao.X * pontoIntercepcao.X + pontoIntercepcao.Z * pontoIntercepcao.Z);
+            //yaw *=  (float)normli;
+            //tankDir.X = (float)((posicao.X - pontoIntercepcao.X) * (float)(normli) * 2*Math.PI);
+            //tankDir.Z = (float)((posicao.Z - pontoIntercepcao.Z) * (float)(normli) * 2*Math.PI);
+            //tankDir.Y = 0;
+            yaw = -(float) Math.Atan2(((posicao.Z - pontoIntercepcao.Z) * (float)(normli) * 2 * Math.PI) - posicao.Z, (float)((posicao.X - pontoIntercepcao.X) * (float)(normli) * 2 * Math.PI) - posicao.X);
+
+
+            if(Math.Abs(tankAPresseguir.posicao.X- posicao.X) >   3) //distancia de segurancao
+            {
+                posicao -= vel * tankDir;
+            }
+       
+
+            //Rotação e/ou movimentação das várias partes do tanque
+            myModel.Root.Transform = rotacao * Matrix.CreateScale(scale) * translacao;
+            turretBone.Transform = Matrix.CreateRotationY(turretAngle) * turretTransform;
+            cannonBone.Transform = Matrix.CreateRotationX(cannonAngle) * cannonTransform;
+
+            left_back_wheelbone.Transform = Matrix.CreateRotationX(wheelRotation) * left_back_wheelTransform;
+            right_back_wheelbone.Transform = Matrix.CreateRotationX(wheelRotation) * right_back_wheelTransform;
+            left_front_wheelbone.Transform = Matrix.CreateRotationX(wheelRotation) * left_front_wheelTransform;
+            right_front_wheelbone.Transform = Matrix.CreateRotationX(wheelRotation) * right_front_wheelTransform;
+
+            right_steerBone.Transform = Matrix.CreateRotationY(wheelSideRotation) * right_steerTransform;
+            left_steerBone.Transform = Matrix.CreateRotationY(wheelSideRotation) * left_steerTransform;
+
+            myModel.CopyAbsoluteBoneTransformsTo(bonetransforms);
+
+            #region CannonRotation
+            Vector3 torreDir = Vector3.Normalize(Vector3.Transform(tankDir, Matrix.CreateFromAxisAngle(tankNormal, turretAngle)));
+            Vector3 torreR = Vector3.Normalize(Vector3.Cross(torreDir, tankNormal));
+            Vector3 cannonDir = Vector3.Normalize(Vector3.Transform(torreDir, Matrix.CreateFromAxisAngle(torreR, cannonAngle)));
+            #endregion
+
+            TargetLine p = new TargetLine(device, new Vector3(posicao.X + 0.04f, posicao.Y, posicao.Z - 0.05f) + new Vector3(0, 1f, 0f), 15, -cannonDir, 200);
+            scopeLine.Add(p);
+
+            if (kb.IsKeyDown(shootKey))
+            {
+                if (recharge == 0 && canShoot)
+                {
+                    //Vector3 ammoDirection = Vector3.Transform(tankDir, Matrix.CreateRotationY(turretAngle));
+                    Ammo ammo = new Ammo(new Vector3(posicao.X + 0.08f, posicao.Y, posicao.Z - 0.09f) + new Vector3(0f, 1f, 0), cannonDir, rotacao, turretAngle, cannonAngle, device);
+                    ammunition.Add(ammo);
+                    canShoot = false;
+                }
+            }
+
+            for (int i = scopeLine.Count() - 1; i > -1; i--)
+            {
+                if (scopeLine[i].isAlive == false)
+                {
+                    scopeLine[i] = null;
+                    scopeLine.RemoveAt(i);
+                }
+            }
+
+            foreach (TargetLine t in scopeLine)
+            {
+                t.Update();
+            }
 
         }
-
         public void Draw(Matrix view2, Matrix proj)
         {
             foreach (ModelMesh mesh in myModel.Meshes)

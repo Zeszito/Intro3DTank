@@ -130,8 +130,8 @@ namespace ProjetoFase1
             #endregion
 
             #region Tanques
-            tank.Update(keyState, terrain, Keys.W, Keys.S, Keys.A,Keys.D, Keys.Right, Keys.Left, Keys.Up, Keys.Down, Keys.Space, sphere,null);
-            tank2.Update(keyState, terrain, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O, Keys.P, Keys.U,Keys.H, Keys.Enter, sphere, null);
+            tank.Update(keyState, terrain, Keys.W, Keys.S, Keys.A,Keys.D, Keys.Right, Keys.Left, Keys.Up, Keys.Down, Keys.Space, sphere);
+            tank2.updateCacador(keyState, terrain, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O, Keys.P, Keys.U,Keys.H, Keys.Enter, sphere, tank);
             #endregion
 
             base.Update(gameTime);
