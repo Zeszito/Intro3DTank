@@ -118,7 +118,8 @@ namespace ProjetoFase1
             //effect.EmissiveColor = new Vector3(150f, 150, 150);
         }
 
-        public void Update(KeyboardState kb, Terrain terrain, Keys up, Keys down, Keys left, Keys right, Keys torreRight, Keys torreLeft, Keys torreUp, Keys torreDown, Keys shootKey, Sphere other, Tank presa)
+        public void Update(KeyboardState kb, Terrain terrain, Keys up, Keys down, Keys left, Keys right, Keys torreRight, Keys torreLeft, 
+            Keys torreUp, Keys torreDown, Keys shootKey, List<Sphere> other, Tank presa)
         {
             //Esta parte do codigo vai calcular a direção do tanque
             Matrix rotacao = Matrix.CreateFromYawPitchRoll(yaw, 0, 0);
@@ -140,6 +141,7 @@ namespace ProjetoFase1
             tankDir = Vector3.Normalize(Vector3.Cross(tankNormal, tankRight));
             rotacao.Forward = tankDir;
 
+          
             #region Boids
             if (presa != null)
             {
@@ -156,20 +158,34 @@ namespace ProjetoFase1
                 {
                     positionPrev -= vel * tankDir;
                     colSphere.center = positionPrev;
-                    if (colSphere.SphereOnSphere(other) == false)
+                    foreach(Sphere sp in other)
                     {
-                        posicao -= vel * tankDir;
-                        wheelRotation += 0.5f;
-                        ismoving = true;
+                        if (colSphere.SphereOnSphere(sp) == false && (!(colSphere.Equals(sp))))
+                        {
+                            posicao -= vel * tankDir;
+                            wheelRotation += 0.5f;
+                            ismoving = true;
+                        }
                     }
+                  
                     colSphere.center = posicao;
                 }
                 if (kb.IsKeyDown(down))
-                {
-                    posicao += vel * tankDir;
-                    wheelRotation -= 0.5f;
-                    ismoving = true;
+                { 
+                        positionPrev += vel * tankDir;
+                        colSphere.center = positionPrev;
+                    foreach (Sphere sp in other)
+                    {
+                        if (colSphere.SphereOnSphere(sp) == false && (!(colSphere.Equals(sp))))
+                        {
+                            posicao += vel * tankDir;
+                            wheelRotation -= 0.5f;
+                            ismoving = true;
+                        }
+                    }
+                    colSphere.center = posicao;
                 }
+
 
                 if (kb.IsKeyDown(right))
                 {
@@ -311,9 +327,10 @@ namespace ProjetoFase1
 
                 //double angloFormado = Math.Acos(Vector2.Dot((new Vector2(posicao.X, posicao.Z)), (new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
                 //double angloFormado = Math.Atan2(pontoIntercepcao.Z - posicao.Z, pontoIntercepcao.X - posicao.X);
-                yaw = (float)Math.Acos((float)(pontoIntercepcao.X * tankDir.X + pontoIntercepcao.Z * tankDir.Z)
-                      /((float)Math.Sqrt((pontoIntercepcao.X * pontoIntercepcao.X) + (pontoIntercepcao.Z * pontoIntercepcao.Z)) * (float)Math.Sqrt((tankDir.Z * tankDir.Z) + (tankDir.X * tankDir.X))));
-                //posicao -= vel * tankDir;
+                //yaw = (float)Math.Acos((float)(pontoIntercepcao.X * tankDir.X + pontoIntercepcao.Z * tankDir.Z)
+                //    /((float)Math.Sqrt((pontoIntercepcao.X * pontoIntercepcao.X) + (pontoIntercepcao.Z * pontoIntercepcao.Z)) * (float)Math.Sqrt((tankDir.Z * tankDir.Z) + (tankDir.X * tankDir.X))));
+                tankDir = -pontoIntercepcao;
+                // posicao -= vel * tankDir;
             }
             if(ismoving == false)
             {
@@ -325,10 +342,11 @@ namespace ProjetoFase1
                 //double angloFormado = Math.Acos(Vector2.Dot(Vector2.Normalize(new Vector2(posicao.X, posicao.Z)), Vector2.Normalize(new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
                 //double angloFormado = Math.Atan(pontoIntercepcao.Z - posicao.Z/ pontoIntercepcao.X - posicao.X);
                 //double angloFormado = Math.Acos(Vector2.Dot((new Vector2(posicao.X, posicao.Z)), (new Vector2(pontoIntercepcao.X, pontoIntercepcao.Y))));
-                yaw = (float)Math.Acos((float)(pontoIntercepcao.X * tankDir.X + pontoIntercepcao.Z * tankDir.Z)
-                / ((float)Math.Sqrt((pontoIntercepcao.X * pontoIntercepcao.X) + (pontoIntercepcao.Z * pontoIntercepcao.Z)) * (float)Math.Sqrt((tankDir.Z * tankDir.Z) + (tankDir.X * tankDir.X))));
+                // yaw = (float)Math.Acos((float)(pontoIntercepcao.X * tankDir.X + pontoIntercepcao.Z * tankDir.Z)
+                // / ((float)Math.Sqrt((pontoIntercepcao.X * pontoIntercepcao.X) + (pontoIntercepcao.Z * pontoIntercepcao.Z)) * (float)Math.Sqrt((tankDir.Z * tankDir.Z) + (tankDir.X * tankDir.X))));
                 //posicao -= vel * tankDir;
-          
+                tankDir = - pontoIntercepcao;
+                //posicao -= vel * tankDir;
 
             }
         

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace ProjetoFase1
 {
@@ -32,6 +33,7 @@ namespace ProjetoFase1
 
         Tank tank;
         Tank tank2;
+        List<Sphere> sphere;
         public static ContentManager content;
 
         public Game1()
@@ -70,6 +72,7 @@ namespace ProjetoFase1
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 4.0f / 3.0f, 1.0f, 10000f);
             halfprojectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, 2.0f / 3.0f, 1.0f, 10000f);
 
+        
             base.Initialize();
         }
 
@@ -85,6 +88,9 @@ namespace ProjetoFase1
             terrain = new Terrain(GraphicsDevice, content);
             tank = new Tank(GraphicsDevice, content, new Vector3(64, 0, 64), cameraMundo.projection);
             tank2 = new Tank(GraphicsDevice, content, new Vector3(60, 0, 60), cameraMundo.projection);
+            sphere = new List<Sphere>();
+            sphere.Add(tank.staticSphere);
+            sphere.Add(tank2.staticSphere);
             // TODO: use this.Content to load your game content here
         }
 
@@ -124,8 +130,8 @@ namespace ProjetoFase1
             #endregion
 
             #region Tanques
-            tank.Update(keyState, terrain, Keys.W, Keys.S, Keys.A,Keys.D, Keys.Right, Keys.Left, Keys.Up, Keys.Down, Keys.Space, tank2.staticSphere,null);
-            tank2.Update(keyState, terrain, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O, Keys.P, Keys.U,Keys.H, Keys.Enter, tank.staticSphere, tank);
+            tank.Update(keyState, terrain, Keys.W, Keys.S, Keys.A,Keys.D, Keys.Right, Keys.Left, Keys.Up, Keys.Down, Keys.Space, sphere,null);
+            tank2.Update(keyState, terrain, Keys.I, Keys.K, Keys.J, Keys.L, Keys.O, Keys.P, Keys.U,Keys.H, Keys.Enter, sphere, null);
             #endregion
 
             base.Update(gameTime);
